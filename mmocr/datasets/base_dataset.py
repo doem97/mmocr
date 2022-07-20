@@ -52,12 +52,7 @@ class BaseDataset(Dataset):
             be turned off in __getitem__.
     """
 
-    def __init__(self,
-                 ann_file,
-                 loader,
-                 pipeline,
-                 img_prefix='',
-                 test_mode=False):
+    def __init__(self, ann_file, loader, pipeline, img_prefix="", test_mode=False):
         super().__init__()
         self.test_mode = test_mode
         self.img_prefix = img_prefix
@@ -81,7 +76,7 @@ class BaseDataset(Dataset):
 
     def pre_pipeline(self, results):
         """Prepare results dict for pipeline."""
-        results['img_prefix'] = self.img_prefix
+        results["img_prefix"] = self.img_prefix
 
     def prepare_train_img(self, index):
         """Get training data and annotations from pipeline.
@@ -115,10 +110,12 @@ class BaseDataset(Dataset):
         try:
             data_info = self.data_infos[index]
             img_prefix = self.img_prefix
-            print_log(f'Warning: skip broken file {data_info} '
-                      f'with img_prefix {img_prefix}')
+            print_log(
+                f"Warning: skip broken file {data_info} "
+                f"with img_prefix {img_prefix}"
+            )
         except Exception as e:
-            print_log(f'load index {index} with error {e}')
+            print_log(f"load index {index} with error {e}")
 
     def _get_next_index(self, index):
         """Get next index from dataset."""
@@ -142,10 +139,10 @@ class BaseDataset(Dataset):
             try:
                 data = self.prepare_train_img(index)
                 if data is None:
-                    raise Exception('prepared train data empty')
+                    raise Exception("prepared train data empty")
                 break
             except Exception as e:
-                print_log(f'prepare index {index} with error {e}')
+                print_log(f"prepare index {index} with error {e}")
                 index = self._get_next_index(index)
         return data
 

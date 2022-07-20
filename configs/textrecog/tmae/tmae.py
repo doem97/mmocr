@@ -1,9 +1,23 @@
+exp_name_usr = "ori_tmae"
+exp_notes_usr = "the original tmae backbone"
+
 _base_ = [
     "../../_base_/default_runtime.py",
-    "../../_base_/recog_pipelines/satrn_pipeline.py",
+    "../../_base_/recog_pipelines/vit_pipeline.py",
     "../../_base_/recog_datasets/ST_train.py",
     "../../_base_/recog_datasets/academic_test.py",
 ]
+
+log_config = dict(
+    interval=10,
+    hooks=[
+        dict(type="TextLoggerHook"),
+        dict(
+            type="WandbLoggerHook",
+            init_kwargs=dict(project="tmae", name=exp_name_usr, notes=exp_notes_usr),
+        ),
+    ],
+)
 
 train_list = {{_base_.train_list}}
 test_list = {{_base_.test_list}}
@@ -43,16 +57,21 @@ model = dict(
 )
 
 # optimizer
-optimizer = dict(type="Adam", lr=3e-4)
+optimizer = dict(type="AdamW", lr=1e-4, weight_decay=0.05, betas=(0.9, 0.999))
 optimizer_config = dict(grad_clip=None)
 # learning policy
-lr_config = dict(policy="step", step=[3, 4])
-
+lr_config = dict(
+    policy="CosineAnnealing",
+    min_lr=0,
+    warmup="linear",
+    warmup_by_epoch=True,
+    warmup_iters=0.5,
+)
 total_epochs = 6
 
 data = dict(
-    samples_per_gpu=64,
-    workers_per_gpu=4,
+    samples_per_gpu=256,
+    workers_per_gpu=8,
     val_dataloader=dict(samples_per_gpu=1),
     test_dataloader=dict(samples_per_gpu=1),
     train=dict(

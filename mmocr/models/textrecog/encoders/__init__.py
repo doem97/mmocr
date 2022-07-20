@@ -6,8 +6,9 @@ from .nrtr_encoder import NRTREncoder
 from .sar_encoder import SAREncoder
 from .satrn_encoder import SatrnEncoder
 from .transformer import TransformerEncoder
+from .vit_encoder import ViTEncoder
 
 __all__ = [
     'SAREncoder', 'NRTREncoder', 'BaseEncoder', 'ChannelReductionEncoder',
-    'SatrnEncoder', 'TransformerEncoder', 'ABIVisionModel'
+    'SatrnEncoder', 'TransformerEncoder', 'ABIVisionModel', 'ViTEncoder'
 ]
